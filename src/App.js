@@ -1,25 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
+import NavigationModule from "./modules/navigation/NavigationModule";
+import React, { Component } from 'react'
+import { AppProvider } from "./context/AppContext";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Creando pagina para el Canchito
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// const appData = {
+//   actualPage: '/',
+//   user: null
+// }
+
+
+export default class App extends Component {
+
+
+  componentDidMount() {
+    // console.log(appData);
+  }
+
+  render() {
+    return (
+      <>
+
+
+        <AppProvider>
+          <NavigationModule />
+        </AppProvider>
+
+
+      </>
+    )
+  }
 }
 
-export default App;
+
+// export default App;
