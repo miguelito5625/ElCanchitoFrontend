@@ -25,6 +25,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import ServiceClients from './ServiceClients';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -116,6 +117,7 @@ const useStylesForm = makeStyles((theme) => ({
 const CreateClientForm = forwardRef((props, ref) => {
     const classes = useStylesForm();
     const [selectedDate, setSelectedDate] = React.useState(new Date('1990-08-18T21:11:54'));
+    const serviceClient = new ServiceClients();
 
     const [clientState, setClientState] = React.useState({
         "cui": "",
@@ -140,7 +142,15 @@ const CreateClientForm = forwardRef((props, ref) => {
         () => ({
             saveNewClient() {
                 return new Promise(function (resolve, reject) {
-                    console.log('el client es:', clientState);
+                    // console.log('el client es:', clientState);
+
+                    serviceClient.createNewClient(clientState).then(res => {
+                                console.log('Axios OK');
+                                console.log(res.data);
+                            }).catch(error => {
+                                console.log('Axios ERROR');
+                                console.log(error.response.data)
+                            });
 
                     if (clientState.name1 && clientState.last_name1) {
                         resolve( 'Correcto' );
@@ -155,7 +165,7 @@ const CreateClientForm = forwardRef((props, ref) => {
     const handleDateChange = (date) => {
         setSelectedDate(date);
         let client = clientState;
-        client.birth_date = fnsFormat(date, 'yyyy/MM/dd');
+        client.birth_date = fnsFormat(date, 'yyyy-MM-dd');
         setClientState(client);
         console.log(clientState);
     };
