@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import React, { useEffect, useRef, useImperativeHandle, forwardRef, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -26,8 +26,10 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import ServiceClients from './ServiceClients';
+import ElCanchitoSnackbars from '../notifications/ElCanchitoSnackbars';
+import AppContext from '../../context/AppContext';
 
-const useStyles = makeStyles((theme) => ({
+const useStylesCreateClientDialog = makeStyles((theme) => ({
     appBar: {
         position: 'relative',
     },
@@ -42,9 +44,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function CreateClientDialog() {
-    const classes = useStyles();
+    const classes = useStylesCreateClientDialog();
     const [open, setOpen] = React.useState(false);
     const childRef = useRef();
+    const {openSnackbars, setSnackbar, actualPage, testVar} = useContext(AppContext);
+
 
 
     const handleClickOpen = () => {
@@ -52,12 +56,13 @@ export default function CreateClientDialog() {
     };
 
     const handleClose = () => {
-        // setOpen(false);
-        childRef.current.saveNewClient().then((res) => {
-            console.log("¡Sí! " + res);
-        }).catch((err) => {
-            console.log("no! " + err);
-        });
+        setSnackbar(true);
+        console.log(openSnackbars);
+        // childRef.current.saveNewClient().then((res) => {
+        //     console.log("¡Sí! " + res);
+        // }).catch((err) => {
+        //     console.log("no! " + err);
+        // });
     };
 
     const getCreateUserForm = (form) => {
@@ -144,19 +149,19 @@ const CreateClientForm = forwardRef((props, ref) => {
                 return new Promise(function (resolve, reject) {
                     // console.log('el client es:', clientState);
 
-                    serviceClient.createNewClient(clientState).then(res => {
-                                console.log('Axios OK');
-                                console.log(res.data);
-                            }).catch(error => {
-                                console.log('Axios ERROR');
-                                console.log(error.response.data)
-                            });
+                    // serviceClient.createNewClient(clientState).then(res => {
+                    //             console.log('Axios OK');
+                    //             console.log(res.data);
+                    //         }).catch(error => {
+                    //             console.log('Axios ERROR');
+                    //             console.log(error.response.data)
+                    //         });
 
-                    if (clientState.name1 && clientState.last_name1) {
-                        resolve( 'Correcto' );
-                    } else {
-                        reject('Necesita al menos el primer nombre y el primer apellido');
-                    }
+                    // if (clientState.name1 && clientState.last_name1) {
+                    //     resolve( 'Correcto' );
+                    // } else {
+                    //     reject('Necesita al menos el primer nombre y el primer apellido');
+                    // }
                 });
             }
         }),
@@ -188,6 +193,8 @@ const CreateClientForm = forwardRef((props, ref) => {
 
     return (
         <form className={classes.root} noValidate autoComplete="off" >
+
+            <ElCanchitoSnackbars open={true}/>
 
             <div className={classes.rootGrid}>
                 <Grid container spacing={3}>

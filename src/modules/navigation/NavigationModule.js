@@ -19,26 +19,20 @@ import { useTheme } from '@material-ui/core/styles';
 import DrawerItems from "./DrawerItems";
 import useStyles from "./useStyles";
 import DashboardPage from '../../pages/DashboardPage';
-
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import ClientsPage from '../../pages/ClientsPage';
-
 import AppContext from '../../context/AppContext'
-
 
 function ResponsiveDrawer(props) {
 
     const appContext = useContext(AppContext);
 
-    useEffect(() => {
-        //se ejecuta al crear el componente
-    }, []);
-
-
     const { window } = props;
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -47,23 +41,16 @@ function ResponsiveDrawer(props) {
     const drawer = (
         <div>
             <div className={classes.toolbar} />
-
             <Divider />
-
             <DrawerItems />
-
         </div>
     );
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
-
         <>
-
             <Router>
-
-
                 <div className={classes.root}>
                     <CssBaseline />
                     <AppBar position="fixed" className={classes.appBar}>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import axios from 'axios';
 import { DataGrid } from '@material-ui/data-grid';
 import CustomNoRowsOverlay from './CustomNoRowsOverlay';
@@ -6,14 +6,13 @@ import CustomLoadingOverlay from "./CustomLoadingOverlay";
 import CreateClientDialog from './CreateClientDialog'
 import { Grid } from '@material-ui/core';
 
-export default class ClientsModule extends Component {
+export default function ClientsModule(props) {
 
-    state = {
-        clients: [],
-        laodingData: true
-    }
+    const [clientsState, setClientsState] = React.useState([]);
+    const [laodingDataState, setLaodingDataState] = React.useState(true);
 
-    columns = [
+
+    const columns = [
 
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'cui', headerName: 'DPI', width: 180 },
@@ -40,75 +39,75 @@ export default class ClientsModule extends Component {
 
     ];
 
-    componentDidMount() {
-        this.getAllClients();
-    }
+    useEffect(() => {
+        console.log('ClientsModule Starts');
+        getAllClients();
+    }, [])
 
-    getAllClients() {
+    const getAllClients = () => {
         axios.get(`http://localhost:3000/clients`)
             .then(res => {
                 const clients = res.data.clients;
                 console.log(clients);
 
                 setTimeout(() => {
-                    this.setState({ clients: this.flatObject(clients), laodingData: false });
+                    setClientsState(flatObject(clients));
+                    setLaodingDataState(false);
                 }, 2000);
 
                 console.log(this.state.clients);
             })
-            .catch(function (error) {
-                console.log('ERROR');
+            .catch(error => {
                 if (error.response) {
-                  console.log(error.response.data);
-                  console.log(error.response.status);
-                  console.log(error.response.headers);
+                    setLaodingDataState(false);
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
                 }
-              });;
+            });;
     }
 
-    flatObject(arrayClients) {
+    const flatObject = (arrayClients) => {
         let clients = [];
         for (let index = 0; index < arrayClients.length; index++) {
-            const user = arrayClients[index];
+            const client = arrayClients[index];
             clients.push({
-                id: user.id,
-                cui: user.person.cui,
-                name1: user.person.name1,
-                name2: user.person.name2,
-                last_name1: user.person.last_name1,
-                last_name2: user.person.last_name2,
-                phone: user.person.phone,
-                email: user.person.email,
+                id: client.id,
+                cui: client.person.cui,
+                name1: client.person.name1,
+                name2: client.person.name2,
+                last_name1: client.person.last_name1,
+                last_name2: client.person.last_name2,
+                phone: client.person.phone,
+                email: client.person.email,
             });
         }
         return clients;
     }
 
-    render() {
-        return (
-            <div>
-                <div style={{ height: 400, width: '100%' }}>
-                    <DataGrid
-                        components={{
-                            NoRowsOverlay: CustomNoRowsOverlay,
-                            LoadingOverlay: CustomLoadingOverlay,
-                        }}
-                        loading={this.state.laodingData}
-                        rows={this.state.clients}
-                        columns={this.columns}
-                        pageSize={5}
-                        checkboxSelection
-                    />
-                </div>
-
-                <br/>
-
-                <Grid container justify="center">
-                <CreateClientDialog />
-                </Grid>
-
-                
+    return (
+        <div>
+            <div style={{ height: 400, width: '100%' }}>
+                <DataGrid
+                    components={{
+                        NoRowsOverlay: CustomNoRowsOverlay,
+                        LoadingOverlay: CustomLoadingOverlay,
+                    }}
+                    loading={laodingDataState}
+                    rows={clientsState}
+                    columns={columns}
+                    pageSize={5}
+                    checkboxSelection
+                />
             </div>
-        )
-    }
+
+            <br />
+
+            <Grid container justify="center">
+                <CreateClientDialog />
+            </Grid>
+
+
+        </div>
+    )
 }

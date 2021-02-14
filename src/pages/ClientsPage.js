@@ -1,35 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
 import AppContext from '../context/AppContext'
 import ClientsModule from '../modules/clients/ClientsModule';
 
 
-export default class ClientsPage extends Component {
+export default function ClientsPage(props){
+    const {actualPage, setActualPage} = useContext(AppContext);
 
-    static contextType = AppContext
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            val1: 'any'
-        };
-      }
-
-    componentDidMount() {
     
-        const { actualPage, setActualPage } = this.context;
+    useEffect(() => {
         setActualPage('Clientes');
-          
-    }
-
-    render() {
+        
+    }, [])
         
         return (
             <div>
                 {/* <h1>Clientes</h1> */}
-
                 <ClientsModule/>
-
             </div>
         )
-    }
+    
 }
