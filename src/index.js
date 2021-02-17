@@ -4,11 +4,21 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AppProvider } from './context/AppContext';
+import { NotificationProvider } from "./context/NotificationContext";
+import { ClientsProvider } from "./context/ClientsContext";
+import { SnackbarProvider } from 'notistack';
+
 
 ReactDOM.render(
   <React.StrictMode>
     <AppProvider>
-      <App />
+      <NotificationProvider>
+        <ClientsProvider>
+          <SnackbarProvider maxSnack={3}>
+            <App />
+          </SnackbarProvider>
+        </ClientsProvider>
+      </NotificationProvider>
     </AppProvider>
   </React.StrictMode>,
   document.getElementById('root')

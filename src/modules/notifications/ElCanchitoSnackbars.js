@@ -3,7 +3,8 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
-import AppContext from '../../context/AppContext';
+import { useNotificationContext } from "../../context/NotificationContext";
+
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ElCanchitoSnackbars(props) {
   const classes = useStyles();
   // const [open, setOpen] = React.useState(false);
-  const {openSnackbars, setSnackbar} = useContext(AppContext);
+  const { openSnackbar, setOpenSnackbar, durationSnackbar, messageSnackbar, severitySnackbar } = useNotificationContext();
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -29,15 +30,15 @@ export default function ElCanchitoSnackbars(props) {
     }
 
     // setOpen(false);
-    setSnackbar(false);
+    setOpenSnackbar(false);
   };
 
   return (
     <div className={classes.root}>
 
-      <Snackbar open={openSnackbars} autoHideDuration={2000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="info">
-          This is a success message!
+      <Snackbar open={openSnackbar} autoHideDuration={durationSnackbar} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={severitySnackbar}>
+          {messageSnackbar}
         </Alert>
       </Snackbar>
      

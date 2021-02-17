@@ -21,11 +21,13 @@ import useStyles from "./useStyles";
 import DashboardPage from '../../pages/DashboardPage';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import ClientsPage from '../../pages/ClientsPage';
-import AppContext from '../../context/AppContext'
+import {useAppContext} from '../../context/AppContext'
 
 function ResponsiveDrawer(props) {
 
-    const appContext = useContext(AppContext);
+    // const appContext = useContext(AppContext);
+    const { actualPage } = useAppContext();
+
 
     const { window } = props;
     const classes = useStyles();
@@ -65,7 +67,7 @@ function ResponsiveDrawer(props) {
                                 <MenuIcon />
                             </IconButton>
                             <Typography variant="h6" noWrap>
-                                {appContext.actualPage}
+                                {actualPage}
                             </Typography>
                         </Toolbar>
                     </AppBar>

@@ -1,63 +1,28 @@
-import React, { Component } from 'react'
+import React, { useState, useMemo } from 'react'
 
-const AppContext = React.createContext()
+const AppContext = React.createContext();
 
-class AppProvider extends Component {
-  // Context state
-  state = {
-    user: null,
-    actualPage: 'Dashboard',
-    openSnackbars: true,
-  }
+export function AppProvider(props) {
 
-  // Method to update state
-  setUser = (user) => {
-    this.setState((prevState) => ({ user }));
-    this.setState({
-      user
-    });
-  }
-
-  // Method to update state
-  setActualPage = (actualPage) => {
-    this.setState({
-      actualPage
-    });
-  }
-
-  // Method to update state
-  setSnackbar = (open) => {
-    this.setState({
-      openSnackbars:open
-    });
-  }
-
-  render() {
-    const { children } = this.props
-    const { user } = this.state
-    const { actualPage } = this.state
-    const { openSnackbars } = this.state
-    const { setUser } = this
-    const { setActualPage } = this
-    const { setSnackbar } = this
-
-    return (
-      <AppContext.Provider
-        value={{
-          user,
-          setUser,
-          actualPage,
+  const [userLogged, setUserLogged] = useState(null);
+  const [actualPage, setActualPage] = useState('Dashboard');
+  
+    const value = useMemo(() => {
+        return({
+          userLogged, 
+          setUserLogged,
+          actualPage, 
           setActualPage,
-          openSnackbars,
-          setSnackbar,
-        }}
-      >
-        {children}
-      </AppContext.Provider>
-    )
-  }
+        })
+    }, [actualPage, userLogged]);
+
+    return <AppContext.Provider value={value} {...props}/>
 }
 
-export default AppContext
-
-export { AppProvider }
+export function useAppContext(){
+    const context = React.useContext(AppContext);
+    if (!context) {
+        throw new Error('useAppContext debe estar dentro del proveedor AppContext');
+    }
+    return context;
+}

@@ -1,13 +1,14 @@
 import React, { Component, useContext, useEffect } from 'react';
-import AppContext from '../context/AppContext'
+import {useAppContext} from '../context/AppContext'
 import ClientsModule from '../modules/clients/ClientsModule';
 
 
 export default function ClientsPage(props){
-    const {actualPage, setActualPage} = useContext(AppContext);
+    const {setActualPage} = useAppContext();
 
     
     useEffect(() => {
+        console.log('init clients page');
         setActualPage('Clientes');
         
     }, [])
