@@ -5,6 +5,13 @@ import ElCanchitoSnackbars from './modules/notifications/ElCanchitoSnackbars';
 
 export default class App extends Component {
 
+  backendURL = process.env.REACT_APP_BACKEND_SERVER;
+
+
+  componentDidMount(){
+    console.log('El backend es: ', this.backendURL);
+  }
+
   render() {
     return (
       <>

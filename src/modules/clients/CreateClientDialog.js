@@ -18,9 +18,9 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import ServiceClients from './ServiceClients';
 import { useClientsContext } from "../../context/ClientsContext";
 import { useSnackbar } from 'notistack';
+import { useAppContext } from '../../context/AppContext';
 
 
 const useStylesCreateClientDialog = makeStyles((theme) => ({
@@ -39,22 +39,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function CreateClientDialog() {
     const classes = useStylesCreateClientDialog();
-    const [open, setOpen] = React.useState(false);
-    const childRef = useRef();
+    const { openCreateClientDialog, setOpenCreateClientDialog } = useAppContext();
+    const { saveNewClient } = useClientsContext();
+
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setOpenCreateClientDialog(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        setOpenCreateClientDialog(false);
     };
-
-    const getCreateUserForm = (form) => {
-        console.log('start getCreateUserForm');
-        console.log(form);
-    };
-
 
 
     return (
@@ -62,24 +57,31 @@ export default function CreateClientDialog() {
             <Button variant="contained" color="primary" onClick={handleClickOpen}>
                 Crear Cliente
       </Button>
-            <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-                <AppBar className={classes.appBar}>
+            <Dialog
+                fullScreen
+                open={openCreateClientDialog}
+                onClose={handleClose}
+                TransitionComponent={Transition}
+            >
+
+                <AppBar className={classes.appBar} position="fixed">
                     <Toolbar>
                         <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
                             Crear Cliente
-            </Typography>
-            
+                         </Typography>
+
+                        <Button autoFocus color="inherit" onClick={saveNewClient}>
+                            Guardar
+                        </Button>
 
                     </Toolbar>
                 </AppBar>
 
 
-                <CreateClientForm ref={childRef} getCreateUserForm={getCreateUserForm} />
-
-
+                <CreateClientForm />
 
             </Dialog>
         </div>
@@ -105,39 +107,13 @@ const useStylesForm = makeStyles((theme) => ({
 // function CreateClientForm(props, ref) {
 const CreateClientForm = forwardRef((props, ref) => {
     const classes = useStylesForm();
-    const [selectedDate, setSelectedDate] = React.useState(new Date('1990-08-18T21:11:54'));
-    const serviceClient = new ServiceClients();
-    // const { createNotification } = useNotificationContext();
-    const { clientInForm, setClientInForm } = useClientsContext();
-    const { enqueueSnackbar } = useSnackbar();
+    const { clientInForm, setClientInForm, selectedDate, setSelectedDate, saveNewClient } = useClientsContext();
 
-
-    const saveNewClient = (event) => {
+    const submitForm = (event) => {
         event.preventDefault();
-            if (clientInForm.name1 && clientInForm.last_name1) {
-                // createNotification(`Creando cliente ${clientInForm.name1} ${clientInForm.last_name1}`, 'info', 1500);
-                enqueueSnackbar(`Creando cliente ${clientInForm.name1} ${clientInForm.last_name1}`, { variant: 'info' });
-
-
-                serviceClient.createNewClient(clientInForm).then(res => {
-                    // createNotification(`Cliente ${clientInForm.name1} ${clientInForm.last_name1} creado`, 'success', 1500);
-                    enqueueSnackbar(`Cliente ${clientInForm.name1} ${clientInForm.last_name1} creado`, { variant: 'success' });
-
-
-                }).catch(error => {
-                    // createNotification(`Error al crear el cliente ${clientInForm.name1} ${clientInForm.last_name1}`, 'error', 1500);
-                    enqueueSnackbar(`Error al crear el cliente ${clientInForm.name1} ${clientInForm.last_name1}`, { variant: 'error' });
-
-                });
-
-            } else {
-                // createNotification(`Necesita al menos el primer nombre y el primer apellido`, 'warning', 1500);
-                enqueueSnackbar(`Necesita al menos el primer nombre y el primer apellido`, { variant: 'warning' });
-
-               
-            }
+        saveNewClient();
     }
-    
+
     const handleDateChange = (date) => {
         setSelectedDate(date);
         let client = clientInForm;
@@ -154,7 +130,7 @@ const CreateClientForm = forwardRef((props, ref) => {
     };
 
     return (
-        <form className={classes.root} noValidate autoComplete="off" onSubmit={saveNewClient}>
+        <form className={classes.root} noValidate autoComplete="off" onSubmit={submitForm}>
 
 
             <div className={classes.rootGrid}>
@@ -232,7 +208,7 @@ const CreateClientForm = forwardRef((props, ref) => {
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
 
 
-                        <Button variant="contained" startIcon={<SaveIcon />} size="large" color="primary" type="submit" fullWidth={true}>
+                        <Button variant="contained" startIcon={<SaveIcon />} size="large" color="primary" type="button" fullWidth={true} onClick={saveNewClient}>
                             Guardar
                         </Button>
 

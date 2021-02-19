@@ -1,17 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -21,119 +13,89 @@ import useStyles from "./useStyles";
 import DashboardPage from '../../pages/DashboardPage';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import ClientsPage from '../../pages/ClientsPage';
-import {useAppContext} from '../../context/AppContext'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import clsx from 'clsx';
+import { useAppContext } from '../../context/AppContext';
 
-function ResponsiveDrawer(props) {
 
-    // const appContext = useContext(AppContext);
+function NavigationModule(props) {
+
     const { actualPage } = useAppContext();
 
-
-    const { window } = props;
     const classes = useStyles();
     const theme = useTheme();
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
 
-    
-
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
+    const handleDrawerOpen = () => {
+        setOpen(true);
     };
 
-    const drawer = (
-        <div>
-            <div className={classes.toolbar} />
-            <Divider />
-            <DrawerItems />
-        </div>
-    );
-
-    const container = window !== undefined ? () => window().document.body : undefined;
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
 
     return (
-        <>
-            <Router>
-                <div className={classes.root}>
-                    <CssBaseline />
-                    <AppBar position="fixed" className={classes.appBar}>
-                        <Toolbar>
-                            <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                edge="start"
-                                onClick={handleDrawerToggle}
-                                className={classes.menuButton}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                            <Typography variant="h6" noWrap>
-                                {actualPage}
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                    <nav className={classes.drawer} aria-label="mailbox folders">
-                        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-                        <Hidden smUp implementation="css">
-                            <Drawer
-                                container={container}
-                                variant="temporary"
-                                anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                                open={mobileOpen}
-                                onClose={handleDrawerToggle}
-                                classes={{
-                                    paper: classes.drawerPaper,
-                                }}
-                                ModalProps={{
-                                    keepMounted: true, // Better open performance on mobile.
-                                }}
-                            >
+        <Router>
+            <div className={classes.root}>
+                <CssBaseline />
+                <AppBar
+                    position="fixed"
+                    className={clsx(classes.appBar, {
+                        [classes.appBarShift]: open,
+                    })}
+                >
+                    <Toolbar>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={handleDrawerOpen}
+                            edge="start"
+                            className={clsx(classes.menuButton, open && classes.hide)}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" noWrap>
+                            {actualPage}
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <Drawer
+                    className={classes.drawer}
+                    variant="persistent"
+                    anchor="left"
+                    open={open}
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                >
+                    <div className={classes.drawerHeader}>
+                        <IconButton onClick={handleDrawerClose}>
+                            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        </IconButton>
+                    </div>
+                    <Divider />
 
-                                {drawer}
-                            </Drawer>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                            <Drawer
-                                classes={{
-                                    paper: classes.drawerPaper,
-                                }}
-                                variant="permanent"
-                                open
-                            >
-                                {/* <div className={classes.toolbar}>
-                            <p>hola</p>
-                        </div> */}
+                    <DrawerItems />
 
-                                <Divider />
+                </Drawer>
+                <main
+                    className={clsx(classes.content, {
+                        [classes.contentShift]: open,
+                    })}
+                >
+                    <div className={classes.drawerHeader} />
 
-                                <DrawerItems />
+                    <div className="container p-4">
+                        <Route path="/" exact component={DashboardPage} />
+                        <Route path="/clients" component={ClientsPage} />
+                        {/* <Route path="/edit/:id" component={CreateNote} /> */}
+                    </div>
 
-                            </Drawer>
-                        </Hidden>
-                    </nav>
-                    <main className={classes.content}>
-                        <div className={classes.toolbar} />
-
-                        <div className="container p-4">
-                            <Route path="/" exact component={DashboardPage} />
-                            <Route path="/clients" component={ClientsPage} />
-                            {/* <Route path="/edit/:id" component={CreateNote} /> */}
-                        </div>
-
-
-                    </main>
-                </div>
-
-            </Router>
-        </>
+                </main>
+            </div>
+        </Router>
     );
 }
 
-ResponsiveDrawer.propTypes = {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
-    window: PropTypes.func,
-};
-
-export default ResponsiveDrawer;
+export default NavigationModule;

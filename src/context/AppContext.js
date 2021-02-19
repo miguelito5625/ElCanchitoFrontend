@@ -6,15 +6,18 @@ export function AppProvider(props) {
 
   const [userLogged, setUserLogged] = useState(null);
   const [actualPage, setActualPage] = useState('Dashboard');
+  const [openCreateClientDialog, setOpenCreateClientDialog] = useState(false);
   
     const value = useMemo(() => {
         return({
-          userLogged, 
+          userLogged,
           setUserLogged,
           actualPage, 
           setActualPage,
+          openCreateClientDialog, 
+          setOpenCreateClientDialog,
         })
-    }, [actualPage, userLogged]);
+    }, [actualPage, userLogged, openCreateClientDialog]);
 
     return <AppContext.Provider value={value} {...props}/>
 }

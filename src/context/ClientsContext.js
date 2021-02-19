@@ -1,9 +1,21 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react';
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
+import { useAppContext } from './AppContext';
+
+
 
 const ClientsContext = React.createContext();
 
 export function ClientsProvider(props) {
-    const [clientsRepo, setClientsRepo] = useState(null);
+    const backendURL = process.env.REACT_APP_BACKEND_SERVER;
+    const { setOpenCreateClientDialog } = useAppContext();
+
+
+
+    const [clientsRepo, setClientsRepo] = useState([]);
+    const [laodingClients, setLaodingClients] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date('1994-06-20T21:11:54'));
     const [clientInForm, setClientInForm] = useState(
         {
             "cui": "",
@@ -14,25 +26,99 @@ export function ClientsProvider(props) {
             "birth_date": "",
             "phone": "",
             "email": "",
-            "country": "",
-            "departament": "",
-            "municipality": "",
+            "country": "Guatemala",
+            "departament": "Izabal",
+            "municipality": "Los Amates",
             "street": "",
             "reference": "",
             "zip_code": ""
         }
     );
 
+    const { enqueueSnackbar } = useSnackbar();
+
+
+    const getAllClients = () => {
+        setLaodingClients(true);
+        axios.get(`http://localhost:3000/clients`)
+            .then(res => {
+                const clients = res.data.clients;
+                console.log(clients);
+                setTimeout(() => {
+                    setClientsRepo(flatObject(clients));
+                    setLaodingClients(false);
+                }, 2000);
+            })
+            .catch(error => {
+                setLaodingClients(false);
+                enqueueSnackbar(`Error al cargar los clientes`, { variant: 'error' });
+                if (error.response) {
+                    setLaodingClients(false);
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                }
+            });
+    }
+
+    const flatObject = (arrayClients) => {
+        let clients = [];
+        for (let index = 0; index < arrayClients.length; index++) {
+            const client = arrayClients[index];
+            clients.push({
+                id: client.id,
+                cui: client.person.cui,
+                name1: client.person.name1,
+                name2: client.person.name2,
+                last_name1: client.person.last_name1,
+                last_name2: client.person.last_name2,
+                phone: client.person.phone,
+                email: client.person.email,
+                isActive: client.person.isActive,
+                createdAt: client.person.createdAt,
+                updatedAt: client.person.updatedAt,
+                country: client.person.address.country,
+                country: client.person.address.country,
+                departament: client.person.address.departament,
+                municipality: client.person.address.municipality,
+                street: client.person.address.street,
+                reference: client.person.address.reference,
+                zip_code: client.person.address.zip_code,
+            });
+        }
+        return clients;
+    }
+
+    const saveNewClient = () => {
+        if (clientInForm.name1 && clientInForm.last_name1) {
+            setOpenCreateClientDialog(false);
+            enqueueSnackbar(`Creando cliente ${clientInForm.name1} ${clientInForm.last_name1}`, { variant: 'info' });
+            axios.post(`${backendURL}/clients`, clientInForm).then(res => {
+                enqueueSnackbar(`Cliente ${clientInForm.name1} ${clientInForm.last_name1} creado`, { variant: 'success' });
+                getAllClients();
+            }).catch(error => {
+                enqueueSnackbar(`Error al crear el cliente ${clientInForm.name1} ${clientInForm.last_name1}`, { variant: 'error' });
+            });
+        } else {
+            enqueueSnackbar(`Necesita al menos el primer nombre y el primer apellido`, { variant: 'warning' });
+        }
+    }
     
 
     const value = useMemo(() => {
         return({
             clientsRepo,
             setClientsRepo,
+            laodingClients, 
+            setLaodingClients,
+            getAllClients,
             clientInForm, 
             setClientInForm,
+            selectedDate, 
+            setSelectedDate,
+            saveNewClient,
         })
-    }, [clientsRepo]);
+    }, [clientsRepo, selectedDate, laodingClients]);
 
     return <ClientsContext.Provider value={value} {...props}/>
 }

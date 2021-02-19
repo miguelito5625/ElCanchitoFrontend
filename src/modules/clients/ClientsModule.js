@@ -4,13 +4,16 @@ import { DataGrid } from '@material-ui/data-grid';
 import CustomNoRowsOverlay from './CustomNoRowsOverlay';
 import CustomLoadingOverlay from "./CustomLoadingOverlay";
 import CreateClientDialog from './CreateClientDialog'
-import { Grid } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
+import { useClientsContext } from "../../context/ClientsContext";
 
 export default function ClientsModule(props) {
 
-    const [clientsState, setClientsState] = React.useState([]);
-    const [laodingDataState, setLaodingDataState] = React.useState(true);
+    const { clientsRepo, laodingClients, getAllClients } = useClientsContext();
 
+    const editClient = () => {
+        console.log('boton presionado');
+    }
 
     const columns = [
 
@@ -18,8 +21,8 @@ export default function ClientsModule(props) {
         { field: 'cui', headerName: 'DPI', width: 180 },
 
         {
-            field: 'fullName',
-            headerName: 'Full name',
+            field: 'cliente',
+            headerName: 'Cliente',
             description: 'This column has a value getter and is not sortable.',
             sortable: false,
             width: 300,
@@ -29,6 +32,25 @@ export default function ClientsModule(props) {
 
         { field: 'phone', headerName: 'Telefono', width: 130 },
         { field: 'email', headerName: 'correo', width: 180 },
+
+        {
+            field: 'actions',
+            headerName: 'Acciones',
+            width: 180,
+            renderCell: () => (
+
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    style={{ marginLeft: 16 }}
+                    onClick={editClient}
+                >
+                    Modificar
+                </Button>
+
+            ),
+        },
 
         // {
         //     field: 'age',
@@ -42,62 +64,41 @@ export default function ClientsModule(props) {
     useEffect(() => {
         console.log('ClientsModule Starts');
         getAllClients();
-    }, [])
+    }, []);
 
-    const getAllClients = () => {
-        axios.get(`http://localhost:3000/clients`)
-            .then(res => {
-                const clients = res.data.clients;
-                console.log(clients);
-
-                setTimeout(() => {
-                    setClientsState(flatObject(clients));
-                    setLaodingDataState(false);
-                }, 2000);
-
-                console.log(this.state.clients);
-            })
-            .catch(error => {
-                if (error.response) {
-                    setLaodingDataState(false);
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                }
-            });;
+    const onRowSelection = (newSelection) => {
+        console.log(newSelection.row);
     }
 
-    const flatObject = (arrayClients) => {
-        let clients = [];
-        for (let index = 0; index < arrayClients.length; index++) {
-            const client = arrayClients[index];
-            clients.push({
-                id: client.id,
-                cui: client.person.cui,
-                name1: client.person.name1,
-                name2: client.person.name2,
-                last_name1: client.person.last_name1,
-                last_name2: client.person.last_name2,
-                phone: client.person.phone,
-                email: client.person.email,
-            });
-        }
-        return clients;
-    }
+
 
     return (
         <div>
             <div style={{ height: 400, width: '100%' }}>
                 <DataGrid
+                    pagination
                     components={{
                         NoRowsOverlay: CustomNoRowsOverlay,
                         LoadingOverlay: CustomLoadingOverlay,
                     }}
-                    loading={laodingDataState}
-                    rows={clientsState}
+                    loading={laodingClients}
+                    rows={clientsRepo}
                     columns={columns}
                     pageSize={5}
-                    checkboxSelection
+                    onRowClick={onRowSelection}
+                    localeText={
+                        {
+                            footerPaginationRowsPerPage: 'Filas por página:',
+                            footerRowSelected: (count) => '',
+                            columnMenuLabel: 'Menu',
+                            columnMenuShowColumns: 'Mostrar columnas',
+                            columnMenuFilter: 'Filtrar',
+                            columnMenuHideColumn: 'Ocultar',
+                            columnMenuUnsort: 'Orden inicial',
+                            columnMenuSortAsc: 'Orden ascendente',
+                            columnMenuSortDesc: 'Orden descendente',
+                        }
+                    }
                 />
             </div>
 

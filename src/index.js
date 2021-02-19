@@ -10,17 +10,18 @@ import { SnackbarProvider } from 'notistack';
 
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AppProvider>
-      <NotificationProvider>
-        <ClientsProvider>
-          <SnackbarProvider maxSnack={3}>
+  // <React.StrictMode>
+    <SnackbarProvider maxSnack={3}>
+      <AppProvider>
+        <NotificationProvider>
+          <ClientsProvider>
             <App />
-          </SnackbarProvider>
-        </ClientsProvider>
-      </NotificationProvider>
-    </AppProvider>
-  </React.StrictMode>,
+          </ClientsProvider>
+        </NotificationProvider>
+      </AppProvider>
+    </SnackbarProvider>,
+
+  // </React.StrictMode>,
   document.getElementById('root')
 );
 
