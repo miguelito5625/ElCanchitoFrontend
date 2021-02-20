@@ -24,6 +24,7 @@
   "scripts": {
     "start": "PORT=4000 react-scripts start",
     "build": "react-scripts build",
+    "buildtoFirebase": "sed -i 's/http/https/g' .env; sed -i 's/localhost/elcanchito.tk/g' .env; react-scripts build; firebase deploy; sed -i 's/https/http/g' .env; sed -i 's/elcanchito.tk/localhost/g' .env",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

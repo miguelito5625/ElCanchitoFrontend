@@ -6,26 +6,38 @@ export function AppProvider(props) {
 
   const [userLogged, setUserLogged] = useState(null);
   const [actualPage, setActualPage] = useState('Dashboard');
-  const [openCreateClientDialog, setOpenCreateClientDialog] = useState(false);
-  
-    const value = useMemo(() => {
-        return({
-          userLogged,
-          setUserLogged,
-          actualPage, 
-          setActualPage,
-          openCreateClientDialog, 
-          setOpenCreateClientDialog,
-        })
-    }, [actualPage, userLogged, openCreateClientDialog]);
+  const [openClientDialog, setOpenClientDialog] = useState(false);
+  const [openContextMenuClients, setOpenContextMenuClients] = useState(
+    {
+      mouseX: null,
+      mouseY: null
+    }
+  );
+  const [titleClientDialog, setTitleClientDialog] = useState('Crear Cliente');
 
-    return <AppContext.Provider value={value} {...props}/>
+
+  const value = useMemo(() => {
+    return ({
+      userLogged,
+      setUserLogged,
+      actualPage,
+      setActualPage,
+      openClientDialog,
+      setOpenClientDialog,
+      openContextMenuClients,
+      setOpenContextMenuClients,
+      titleClientDialog, 
+      setTitleClientDialog,
+    })
+  }, [actualPage, userLogged, openClientDialog, openContextMenuClients, titleClientDialog]);
+
+  return <AppContext.Provider value={value} {...props} />
 }
 
-export function useAppContext(){
-    const context = React.useContext(AppContext);
-    if (!context) {
-        throw new Error('useAppContext debe estar dentro del proveedor AppContext');
-    }
-    return context;
+export function useAppContext() {
+  const context = React.useContext(AppContext);
+  if (!context) {
+    throw new Error('useAppContext debe estar dentro del proveedor AppContext');
+  }
+  return context;
 }

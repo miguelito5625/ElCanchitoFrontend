@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import axios from 'axios';
 import { DataGrid } from '@material-ui/data-grid';
 import CustomNoRowsOverlay from './CustomNoRowsOverlay';
@@ -6,14 +6,24 @@ import CustomLoadingOverlay from "./CustomLoadingOverlay";
 import CreateClientDialog from './CreateClientDialog'
 import { Button, Grid } from '@material-ui/core';
 import { useClientsContext } from "../../context/ClientsContext";
+import { useAppContext } from '../../context/AppContext';
+import ContextMenuClients from "./ContextMenuClients";
 
 export default function ClientsModule(props) {
 
-    const { clientsRepo, laodingClients, getAllClients } = useClientsContext();
+    const { clientsRepo, laodingClients, getAllClients, selectedClient, setSelectedClient } = useClientsContext();
+    const { setOpenContextMenuClients } = useAppContext();
 
-    const editClient = () => {
-        console.log('boton presionado');
-    }
+    const openContextMenu = (event) => {
+        event.preventDefault();
+        if (selectedClient) {
+            setOpenContextMenuClients({
+                mouseX: event.clientX - 2,
+                mouseY: event.clientY - 4,
+            });
+        }
+
+    };
 
     const columns = [
 
@@ -33,24 +43,24 @@ export default function ClientsModule(props) {
         { field: 'phone', headerName: 'Telefono', width: 130 },
         { field: 'email', headerName: 'correo', width: 180 },
 
-        {
-            field: 'actions',
-            headerName: 'Acciones',
-            width: 180,
-            renderCell: () => (
+        // {
+        //     field: 'actions',
+        //     headerName: 'Acciones',
+        //     width: 180,
+        //     renderCell: () => (
 
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    style={{ marginLeft: 16 }}
-                    onClick={editClient}
-                >
-                    Modificar
-                </Button>
+        //         <Button
+        //             variant="contained"
+        //             color="primary"
+        //             size="small"
+        //             style={{ marginLeft: 16 }}
+        //             onClick={editClient}
+        //         >
+        //             Modificar
+        //         </Button>
 
-            ),
-        },
+        //     ),
+        // },
 
         // {
         //     field: 'age',
@@ -67,14 +77,13 @@ export default function ClientsModule(props) {
     }, []);
 
     const onRowSelection = (newSelection) => {
-        console.log(newSelection.row);
+        setSelectedClient(newSelection.row);
     }
-
-
 
     return (
         <div>
-            <div style={{ height: 400, width: '100%' }}>
+            <ContextMenuClients />
+            <div style={{ height: 400, width: '100%' }} onContextMenu={openContextMenu}>
                 <DataGrid
                     pagination
                     components={{
@@ -99,6 +108,10 @@ export default function ClientsModule(props) {
                             columnMenuSortDesc: 'Orden descendente',
                         }
                     }
+                    // onSelectionChange={(newSelection) => {
+                    //     console.log(newSelection);
+
+                    // }}
                 />
             </div>
 

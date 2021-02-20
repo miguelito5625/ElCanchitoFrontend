@@ -39,16 +39,19 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function CreateClientDialog() {
     const classes = useStylesCreateClientDialog();
-    const { openCreateClientDialog, setOpenCreateClientDialog } = useAppContext();
-    const { saveNewClient } = useClientsContext();
+    const { openClientDialog, setOpenClientDialog, titleClientDialog, setTitleClientDialog } = useAppContext();
+    const { saveOrUpdateCliente, clearSelectedClient } = useClientsContext();
 
 
     const handleClickOpen = () => {
-        setOpenCreateClientDialog(true);
+        setTitleClientDialog('Crear Cliente');
+        clearSelectedClient();
+        setOpenClientDialog(true);
     };
 
     const handleClose = () => {
-        setOpenCreateClientDialog(false);
+        setOpenClientDialog(false);
+        clearSelectedClient();
     };
 
 
@@ -59,7 +62,7 @@ export default function CreateClientDialog() {
       </Button>
             <Dialog
                 fullScreen
-                open={openCreateClientDialog}
+                open={openClientDialog}
                 onClose={handleClose}
                 TransitionComponent={Transition}
             >
@@ -70,10 +73,10 @@ export default function CreateClientDialog() {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            Crear Cliente
+                            {titleClientDialog}
                          </Typography>
 
-                        <Button autoFocus color="inherit" onClick={saveNewClient}>
+                        <Button autoFocus color="inherit" onClick={saveOrUpdateCliente}>
                             Guardar
                         </Button>
 
@@ -107,11 +110,11 @@ const useStylesForm = makeStyles((theme) => ({
 // function CreateClientForm(props, ref) {
 const CreateClientForm = forwardRef((props, ref) => {
     const classes = useStylesForm();
-    const { clientInForm, setClientInForm, selectedDate, setSelectedDate, saveNewClient } = useClientsContext();
+    const { clientInForm, setClientInForm, selectedDate, setSelectedDate, saveOrUpdateCliente } = useClientsContext();
 
     const submitForm = (event) => {
         event.preventDefault();
-        saveNewClient();
+        saveOrUpdateCliente();
     }
 
     const handleDateChange = (date) => {
@@ -208,7 +211,7 @@ const CreateClientForm = forwardRef((props, ref) => {
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
 
 
-                        <Button variant="contained" startIcon={<SaveIcon />} size="large" color="primary" type="button" fullWidth={true} onClick={saveNewClient}>
+                        <Button variant="contained" startIcon={<SaveIcon />} size="large" color="primary" type="button" fullWidth={true} onClick={saveOrUpdateCliente}>
                             Guardar
                         </Button>
 
