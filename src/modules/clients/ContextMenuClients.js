@@ -11,11 +11,16 @@ const initialState = {
 };
 
 export default function ContextMenuClients() {
-  const {openContextMenuClients, setOpenContextMenuClients} = useAppContext();
-  const { editClient } = useClientsContext();
+  const {openContextMenuClients, setOpenContextMenuClients } = useAppContext();
+  const { editClient, showDetailsClient, switchStateClient, setOpenDeleteClientDialog } = useClientsContext();
 
   const handleClose = () => {
     setOpenContextMenuClients(initialState);
+  };
+
+  const handleConfirmDelete = () => {
+    setOpenContextMenuClients(initialState);
+    setOpenDeleteClientDialog(true);
   };
 
   return (
@@ -31,8 +36,9 @@ export default function ContextMenuClients() {
             : undefined
         }
       >
+        <MenuItem onClick={showDetailsClient}>Ver datos</MenuItem>
         <MenuItem onClick={editClient}>Modificar</MenuItem>
-        <MenuItem onClick={handleClose}>Borrar</MenuItem>
+        <MenuItem onClick={handleConfirmDelete}>Eliminar</MenuItem>
       </Menu>
     </div>
   );

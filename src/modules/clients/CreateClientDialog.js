@@ -19,7 +19,6 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { useClientsContext } from "../../context/ClientsContext";
-import { useSnackbar } from 'notistack';
 import { useAppContext } from '../../context/AppContext';
 
 
@@ -40,10 +39,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function CreateClientDialog() {
     const classes = useStylesCreateClientDialog();
     const { openClientDialog, setOpenClientDialog, titleClientDialog, setTitleClientDialog } = useAppContext();
-    const { saveOrUpdateCliente, clearSelectedClient } = useClientsContext();
+    const { saveOrUpdateCliente, clearSelectedClient, setSelectedDate } = useClientsContext();
 
 
     const handleClickOpen = () => {
+        setSelectedDate(null);
         setTitleClientDialog('Crear Cliente');
         clearSelectedClient();
         setOpenClientDialog(true);

@@ -8,6 +8,8 @@ import { Button, Grid } from '@material-ui/core';
 import { useClientsContext } from "../../context/ClientsContext";
 import { useAppContext } from '../../context/AppContext';
 import ContextMenuClients from "./ContextMenuClients";
+import DetailsClientDialog from './DetailsClientDialog';
+import ConfirmDeleteClientDialog from './ConfirmDeleteClientDialog';
 
 export default function ClientsModule(props) {
 
@@ -27,7 +29,7 @@ export default function ClientsModule(props) {
 
     const columns = [
 
-        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'no', headerName: 'No.', width: 100 },
         { field: 'cui', headerName: 'DPI', width: 180 },
 
         {
@@ -71,20 +73,39 @@ export default function ClientsModule(props) {
 
     ];
 
+    let intervalGetAllClients;
+
+    //On mount component
     useEffect(() => {
         console.log('ClientsModule Starts');
         getAllClients();
+        // intervalGetAllClients = setInterval(() => {
+        //     console.log('Cargando clientes');
+        //     getAllClients();
+        // }, 2000);
+        
     }, []);
+
+    //On unmount Component 
+    // useEffect( () => () => {
+    //     console.log("unmount");
+    //     console.log(intervalGetAllClients);
+    //     clearInterval(intervalGetAllClients);
+    // }, [] );
+
 
     const onRowSelection = (newSelection) => {
         setSelectedClient(newSelection.row);
     }
 
     return (
-        <div>
+        <>
+        <ConfirmDeleteClientDialog/>
             <ContextMenuClients />
             <div style={{ height: 400, width: '100%' }} onContextMenu={openContextMenu}>
                 <DataGrid
+                    pageSize={5}
+                    rowsPerPageOptions={[5, 10, 20]}
                     pagination
                     components={{
                         NoRowsOverlay: CustomNoRowsOverlay,
@@ -108,10 +129,10 @@ export default function ClientsModule(props) {
                             columnMenuSortDesc: 'Orden descendente',
                         }
                     }
-                    // onSelectionChange={(newSelection) => {
-                    //     console.log(newSelection);
+                // onSelectionChange={(newSelection) => {
+                //     console.log(newSelection);
 
-                    // }}
+                // }}
                 />
             </div>
 
@@ -119,9 +140,10 @@ export default function ClientsModule(props) {
 
             <Grid container justify="center">
                 <CreateClientDialog />
+                <DetailsClientDialog />
             </Grid>
 
 
-        </div>
+        </>
     )
 }

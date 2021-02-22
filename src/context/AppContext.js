@@ -7,6 +7,7 @@ export function AppProvider(props) {
   const [userLogged, setUserLogged] = useState(null);
   const [actualPage, setActualPage] = useState('Dashboard');
   const [openClientDialog, setOpenClientDialog] = useState(false);
+  const [openDetailsClientDialog, setOpenDetailsClientDialog] = useState(false);
   const [openContextMenuClients, setOpenContextMenuClients] = useState(
     {
       mouseX: null,
@@ -28,8 +29,10 @@ export function AppProvider(props) {
       setOpenContextMenuClients,
       titleClientDialog, 
       setTitleClientDialog,
+      openDetailsClientDialog, 
+      setOpenDetailsClientDialog,
     })
-  }, [actualPage, userLogged, openClientDialog, openContextMenuClients, titleClientDialog]);
+  }, [actualPage, userLogged, openClientDialog, openContextMenuClients, titleClientDialog, openDetailsClientDialog]);
 
   return <AppContext.Provider value={value} {...props} />
 }
