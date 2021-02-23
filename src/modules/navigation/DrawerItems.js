@@ -24,6 +24,11 @@ export default class DrawerItems extends Component {
                     <ListItemText primary={'Clientes'} />
                 </ListItem>
 
+                <ListItem button key={'Proveedores'} component={Link} to={'/suppliers'}>
+                    <ListItemIcon> <PersonIcon /> </ListItemIcon>
+                    <ListItemText primary={'Proveedores'} />
+                </ListItem>
+
             </>
 
         )

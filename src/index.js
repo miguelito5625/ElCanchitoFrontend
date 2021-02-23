@@ -7,6 +7,7 @@ import { AppProvider } from './context/AppContext';
 import { NotificationProvider } from "./context/NotificationContext";
 import { ClientsProvider } from "./context/ClientsContext";
 import { SnackbarProvider } from 'notistack';
+import { SuppliersProvider } from './context/SuppliersContext';
 
 
 ReactDOM.render(
@@ -15,7 +16,9 @@ ReactDOM.render(
       <AppProvider>
         <NotificationProvider>
           <ClientsProvider>
+            <SuppliersProvider>
             <App />
+            </SuppliersProvider>
           </ClientsProvider>
         </NotificationProvider>
       </AppProvider>

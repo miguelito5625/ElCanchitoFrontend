@@ -17,6 +17,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx';
 import { useAppContext } from '../../context/AppContext';
+import SuppliersPage from '../../pages/SuppliersPage';
 
 
 function NavigationModule(props) {
@@ -89,6 +90,7 @@ function NavigationModule(props) {
                     <div className="container p-4">
                         <Route path="/" exact component={DashboardPage} />
                         <Route path="/clients" component={ClientsPage} />
+                        <Route path="/suppliers" component={SuppliersPage} />
                         {/* <Route path="/edit/:id" component={CreateNote} /> */}
                     </div>
 
