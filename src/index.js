@@ -8,21 +8,24 @@ import { NotificationProvider } from "./context/NotificationContext";
 import { ClientsProvider } from "./context/ClientsContext";
 import { SnackbarProvider } from 'notistack';
 import { SuppliersProvider } from './context/SuppliersContext';
+import { ProductsProvider } from './context/ProductsContext';
 
 
 ReactDOM.render(
   // <React.StrictMode>
-    <SnackbarProvider maxSnack={3}>
-      <AppProvider>
-        <NotificationProvider>
-          <ClientsProvider>
-            <SuppliersProvider>
-            <App />
-            </SuppliersProvider>
-          </ClientsProvider>
-        </NotificationProvider>
-      </AppProvider>
-    </SnackbarProvider>,
+  <SnackbarProvider maxSnack={3}>
+    <AppProvider>
+      <NotificationProvider>
+        <ClientsProvider>
+          <SuppliersProvider>
+            <ProductsProvider>
+              <App />
+            </ProductsProvider>
+          </SuppliersProvider>
+        </ClientsProvider>
+      </NotificationProvider>
+    </AppProvider>
+  </SnackbarProvider>,
 
   // </React.StrictMode>,
   document.getElementById('root')

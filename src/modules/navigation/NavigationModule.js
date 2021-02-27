@@ -18,6 +18,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx';
 import { useAppContext } from '../../context/AppContext';
 import SuppliersPage from '../../pages/SuppliersPage';
+import ProductsPage from '../../pages/ProductsPage';
 
 
 function NavigationModule(props) {
@@ -91,6 +92,7 @@ function NavigationModule(props) {
                         <Route path="/" exact component={DashboardPage} />
                         <Route path="/clients" component={ClientsPage} />
                         <Route path="/suppliers" component={SuppliersPage} />
+                        <Route path="/products" component={ProductsPage} />
                         {/* <Route path="/edit/:id" component={CreateNote} /> */}
                     </div>
 

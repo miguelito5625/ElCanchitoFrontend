@@ -109,7 +109,7 @@ export function SuppliersProvider(props) {
             })
             .catch(error => {
                 setLaodingSuppliers(false);
-                enqueueSnackbar(`Error al cargar los proveedors`, { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+                enqueueSnackbar(`Error al cargar los proveedores`, { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
                 if (error.response) {
                     setLaodingSuppliers(false);
                     console.log(error.response.data);
