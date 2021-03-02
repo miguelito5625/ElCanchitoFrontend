@@ -9,10 +9,12 @@ import { useProductsContext } from "../../context/ProductsContext";
 import ContextMenuProducts from "./ContextMenuProducts";
 import DetailsProductDialog from './DetailsProductDialog';
 import ConfirmDeleteProductDialog from './ConfirmDeleteProductDialog';
+import { useSuppliersContext } from '../../context/SuppliersContext';
 
 export default function ProductsModule(props) {
 
     const { productsRepo, laodingProducts, getAllProducts, selectedProduct, setSelectedProduct, setOpenContextMenuProducts } = useProductsContext();
+    const { getAllSuppliers } = useSuppliersContext();
 
     const openContextMenu = (event) => {
         event.preventDefault();
@@ -28,20 +30,14 @@ export default function ProductsModule(props) {
     const columns = [
 
         { field: 'no', headerName: 'No.', width: 100 },
-        { field: 'cui', headerName: 'DPI', width: 180 },
-
-        {
-            field: 'proveedor',
-            headerName: 'Proveedor',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 300,
-            valueGetter: (params) =>
-                `${params.getValue('name1') || ''} ${params.getValue('name2') || ''} ${params.getValue('last_name1') || ''} ${params.getValue('last_name2') || ''}`,
-        },
-
-        { field: 'phone', headerName: 'Telefono', width: 130 },
-        { field: 'email', headerName: 'correo', width: 180 },
+        { field: 'name', headerName: 'Producto', width: 180 },
+        { field: 'description', headerName: 'Descripcion', width: 130 },
+        { field: 'brand', headerName: 'Marca', width: 180 },
+        { field: 'supplier', headerName: 'Proveedor', width: 180 },
+        { field: 'stock', headerName: 'Existencia', width: 180 },
+        { field: 'unit', headerName: 'Unidad de medida', width: 180 },
+        { field: 'purchase_price', headerName: 'Precio de compra Q', width: 180 },
+        { field: 'sale_price', headerName: 'Precio de venta Q', width: 180 },
 
     ];
 
@@ -51,6 +47,7 @@ export default function ProductsModule(props) {
     useEffect(() => {
         console.log('ProductsModule Starts');
         getAllProducts();
+        getAllSuppliers();
     }, []);
 
 

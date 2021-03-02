@@ -146,6 +146,7 @@ export function SuppliersProvider(props) {
                     street: supplier.person.address.street,
                     reference: supplier.person.address.reference,
                     zip_code: supplier.person.address.zip_code,
+                    fullName: `${supplier.person.name1} ${supplier.person.name2} ${supplier.person.last_name1} ${supplier.person.last_name2}`
                 });
             }
         }

@@ -1,5 +1,5 @@
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { Home as HomeIcon, Person as PersonIcon } from '@material-ui/icons';
+import { Home as HomeIcon, Person as PersonIcon, ShoppingBasket as ShoppingBasketIcon } from '@material-ui/icons';
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ export default class DrawerItems extends Component {
                 </ListItem>
 
                 <ListItem button key={'Productos'} component={Link} to={'/products'}>
-                    <ListItemIcon> <PersonIcon /> </ListItemIcon>
+                    <ListItemIcon> <ShoppingBasketIcon /> </ListItemIcon>
                     <ListItemText primary={'Productos'} />
                 </ListItem>
 

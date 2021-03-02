@@ -57,7 +57,7 @@ export function ProductsProvider(props) {
             setSelectedDate(null);
         }
 
-        setTitleProductCreateDialog('Modificar Proveedor');
+        setTitleProductCreateDialog('Modificar Producto');
         setOpenProductCreateDialog(true);
         setOpenContextMenuProducts(initialStateContextMenuProduct);
     }
@@ -76,20 +76,14 @@ export function ProductsProvider(props) {
     const clearSelectedProduct = () => {
         setProductInForm(
             {
-                "cui": "",
-                "name1": "",
-                "name2": "",
-                "last_name1": "",
-                "last_name2": "",
-                "birth_date": "",
-                "phone": "",
-                "email": "",
-                "country": "Guatemala",
-                "departament": "Izabal",
-                "municipality": "Los Amates",
-                "street": "",
-                "reference": "",
-                "zip_code": ""
+                "name": "",
+                "description": "",
+                "brandId": "",
+                "supplierId": "",
+                "stock": "",
+                "unit": "",
+                "purchase_price": "",
+                "sale_price": "",
             }
         );
     }
@@ -123,31 +117,25 @@ export function ProductsProvider(props) {
         let noProduct = 1;
         for (let index = 0; index < arrayProducts.length; index++) {
             const product = arrayProducts[index];
-            if (product.person.isActive) {
+            if (product.isActive) {
+                const supplier  = product.supplier?`${product.supplier.person.name1} ${product.supplier.person.name2} ${product.supplier.person.last_name1} ${product.supplier.person.last_name2}`:'';
+                const brand = product.brand?product.brand.name:'';
                 products.push({
                     no: noProduct++,
                     id: product.id,
-                    cui: product.person.cui,
-                    name1: product.person.name1,
-                    name2: product.person.name2,
-                    last_name1: product.person.last_name1,
-                    last_name2: product.person.last_name2,
-                    birth_date: product.person.birth_date,
-                    phone: product.person.phone,
-                    email: product.person.email,
-                    isActive: product.person.isActive,
-                    createdAt: product.person.createdAt,
-                    updatedAt: product.person.updatedAt,
-                    country: product.person.address.country,
-                    country: product.person.address.country,
-                    departament: product.person.address.departament,
-                    municipality: product.person.address.municipality,
-                    street: product.person.address.street,
-                    reference: product.person.address.reference,
-                    zip_code: product.person.address.zip_code,
+                    name: product.name,
+                    description: product.description,
+                    brand,
+                    supplier,
+                    stock: product.stock,
+                    unit: product.unit,
+                    purchase_price: product.purchase_price.toFixed(2),
+                    sale_price: product.sale_price.toFixed(2),
                 });
             }
         }
+        console.log('Flat products');
+        console.log(products);
         return products;
     }
 

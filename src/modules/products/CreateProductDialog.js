@@ -20,6 +20,8 @@ import {
 } from '@material-ui/pickers';
 import { useProductsContext } from "../../context/ProductsContext";
 import { useAppContext } from '../../context/AppContext';
+import { Autocomplete } from '@material-ui/lab';
+import { useSuppliersContext } from '../../context/SuppliersContext';
 
 
 const useStylesCreateProductDialog = makeStyles((theme) => ({
@@ -39,20 +41,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function CreateProductDialog() {
     const classes = useStylesCreateProductDialog();
 
-    const { 
-        saveOrUpdateProducte, 
-        clearSelectedProduct, 
-        setSelectedDate, 
-        openProductCreateDialog, 
-        setOpenProductCreateDialog, 
-        titleProductCreateDialog, 
-        setTitleProductCreateDialog 
+    const {
+        saveOrUpdateProducte,
+        clearSelectedProduct,
+        setSelectedDate,
+        openProductCreateDialog,
+        setOpenProductCreateDialog,
+        titleProductCreateDialog,
+        setTitleProductCreateDialog
     } = useProductsContext();
 
 
     const handleClickOpen = () => {
         setSelectedDate(null);
-        setTitleProductCreateDialog('Crear Proveedor');
+        setTitleProductCreateDialog('Crear Producto');
         clearSelectedProduct();
         setOpenProductCreateDialog(true);
     };
@@ -66,7 +68,7 @@ export default function CreateProductDialog() {
     return (
         <div>
             <Button variant="contained" color="primary" onClick={handleClickOpen}>
-                Crear Proveedor
+                Crear Producto
       </Button>
             <Dialog
                 fullScreen
@@ -82,7 +84,7 @@ export default function CreateProductDialog() {
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
                             {titleProductCreateDialog}
-                         </Typography>
+                        </Typography>
 
                         <Button autoFocus color="inherit" onClick={saveOrUpdateProducte}>
                             Guardar
@@ -119,19 +121,19 @@ const useStylesForm = makeStyles((theme) => ({
 const CreateProductForm = forwardRef((props, ref) => {
     const classes = useStylesForm();
     const { productInForm, setProductInForm, selectedDate, setSelectedDate, saveOrUpdateProducte } = useProductsContext();
+    const { suppliersRepo } = useSuppliersContext();
 
     const submitForm = (event) => {
         event.preventDefault();
         saveOrUpdateProducte();
     }
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
+    const handleSupplierChange = (event, newValue) => {
         let product = productInForm;
-        product.birth_date = fnsFormat(date, 'yyyy-MM-dd');
+        product['supplierId'] = newValue?newValue.id:null;
         setProductInForm(product);
         console.log(productInForm);
-    };
+      };
 
     const handleInputChange = (e) => {
         let product = productInForm;
@@ -148,78 +150,52 @@ const CreateProductForm = forwardRef((props, ref) => {
                 <Grid container spacing={3}>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="cui" label="DPI" variant="outlined" fullWidth={true} defaultValue={productInForm.cui} onChange={handleInputChange} />
+                        <TextField id="name" label="Nombre" variant="outlined" fullWidth={true} defaultValue={productInForm.name} onChange={handleInputChange} />
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="name1" label="Primer Nombre" variant="outlined" fullWidth={true} defaultValue={productInForm.name1} onChange={handleInputChange} />
+                        <TextField id="description" label="Descripcion" variant="outlined" fullWidth={true} defaultValue={productInForm.description} onChange={handleInputChange} />
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="name2" label="Segundo Nombre" variant="outlined" fullWidth={true} defaultValue={productInForm.name2} onChange={handleInputChange} />
+                        <TextField id="brandId" label="Marca" variant="outlined" fullWidth={true} defaultValue={productInForm.brandId} onChange={handleInputChange} />
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="last_name1" label="Primer Apellido" variant="outlined" fullWidth={true} defaultValue={productInForm.last_name1} onChange={handleInputChange} />
+                        {/* <TextField id="supplierId" label="Provvedor" variant="outlined" fullWidth={true} defaultValue={productInForm.supplierId} onChange={handleInputChange} /> */}
+
+                        <Autocomplete
+                            id="combo-box-demo"
+                            options={suppliersRepo}
+                            getOptionLabel={(option) => option.fullName}
+                            fullWidth={true}
+                            onChange={handleSupplierChange}
+                            renderInput={(params) => <TextField {...params} label="Proveedor" variant="outlined" />}
+                        />
+
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="last_name2" label="Segundo Apellido" variant="outlined" fullWidth={true} defaultValue={productInForm.last_name2} onChange={handleInputChange} />
+                        <TextField id="stock" label="Existencia" variant="outlined" fullWidth={true} defaultValue={productInForm.stock} onChange={handleInputChange} />
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={esLocale}>
-
-                            <KeyboardDatePicker
-                                fullWidth={true}
-                                id="date-picker-dialog"
-                                label="Fecha de nacimiento"
-                                format="dd/MM/yyyy"
-                                value={selectedDate}
-                                onChange={handleDateChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                            />
-                        </MuiPickersUtilsProvider>
+                        <TextField id="unit" label="Unidad" variant="outlined" fullWidth={true} defaultValue={productInForm.unit} onChange={handleInputChange} />
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="phone" label="Teléfono" variant="outlined" fullWidth={true} defaultValue={productInForm.phone} onChange={handleInputChange} />
+                        <TextField id="purchase_price" label="Precio de compra" variant="outlined" fullWidth={true} defaultValue={productInForm.purchase_price} onChange={handleInputChange} />
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="email" label="Correo @" variant="outlined" fullWidth={true} defaultValue={productInForm.email} onChange={handleInputChange} />
+                        <TextField id="sale_price" label="Precio de venta" variant="outlined" fullWidth={true} defaultValue={productInForm.sale_price} onChange={handleInputChange} />
                     </Grid>
 
-                    <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="country" label="País" variant="outlined" fullWidth={true} defaultValue={productInForm.country} onChange={handleInputChange} />
-                    </Grid>
-
-                    <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="departament" label="Departamento" variant="outlined" fullWidth={true} defaultValue={productInForm.departament} onChange={handleInputChange} />
-                    </Grid>
-
-                    <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="municipality" label="Municipio" variant="outlined" fullWidth={true} defaultValue={productInForm.municipality} onChange={handleInputChange} />
-                    </Grid>
-
-                    <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="street" label="Calle" variant="outlined" fullWidth={true} defaultValue={productInForm.street} onChange={handleInputChange} />
-                    </Grid>
-
-                    <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="reference" label="Referencia" variant="outlined" fullWidth={true} defaultValue={productInForm.reference} onChange={handleInputChange} />
-                    </Grid>
-
-                    <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="zip_code" label="Código postal" variant="outlined" fullWidth={true} defaultValue={productInForm.zip_code} onChange={handleInputChange} />
-                    </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
 
 
-                        <Button variant="contained" startIcon={<SaveIcon />} size="large" color="primary" type="button" fullWidth={true} onClick={saveOrUpdateProducte}>
+                        <Button variant="contained" startIcon={<SaveIcon />} size="large" color="primary" type="button" fullWidth={true} style={{ minHeight: '100%' }} onClick={saveOrUpdateProducte}>
                             Guardar
                         </Button>
 
