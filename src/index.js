@@ -9,6 +9,7 @@ import { ClientsProvider } from "./context/ClientsContext";
 import { SnackbarProvider } from 'notistack';
 import { SuppliersProvider } from './context/SuppliersContext';
 import { ProductsProvider } from './context/ProductsContext';
+import { BrandsProvider } from './context/BrandsContext';
 
 
 ReactDOM.render(
@@ -19,7 +20,9 @@ ReactDOM.render(
         <ClientsProvider>
           <SuppliersProvider>
             <ProductsProvider>
-              <App />
+             <BrandsProvider>
+             <App />
+             </BrandsProvider>
             </ProductsProvider>
           </SuppliersProvider>
         </ClientsProvider>

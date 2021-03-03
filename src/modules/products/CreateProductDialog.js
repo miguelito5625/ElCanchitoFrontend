@@ -22,6 +22,7 @@ import { useProductsContext } from "../../context/ProductsContext";
 import { useAppContext } from '../../context/AppContext';
 import { Autocomplete } from '@material-ui/lab';
 import { useSuppliersContext } from '../../context/SuppliersContext';
+import { useBrandsContext } from '../../context/BrandsContext';
 
 
 const useStylesCreateProductDialog = makeStyles((theme) => ({
@@ -120,8 +121,9 @@ const useStylesForm = makeStyles((theme) => ({
 // function CreateProductForm(props, ref) {
 const CreateProductForm = forwardRef((props, ref) => {
     const classes = useStylesForm();
-    const { productInForm, setProductInForm, selectedDate, setSelectedDate, saveOrUpdateProducte } = useProductsContext();
+    const { productInForm, setProductInForm, selectedProduct, saveOrUpdateProducte } = useProductsContext();
     const { suppliersRepo } = useSuppliersContext();
+    const { brandsRepo } = useBrandsContext();
 
     const submitForm = (event) => {
         event.preventDefault();
@@ -131,9 +133,19 @@ const CreateProductForm = forwardRef((props, ref) => {
     const handleSupplierChange = (event, newValue) => {
         let product = productInForm;
         product['supplierId'] = newValue?newValue.id:null;
+        product['supplier'] = newValue?newValue.name:null;
         setProductInForm(product);
         console.log(productInForm);
       };
+
+      const handleBrandChange = (event, newValue) => {
+        let product = productInForm;
+        product['brandId'] = newValue?newValue.id:null;
+        product['brand'] = newValue?newValue.name:null;
+        setProductInForm(product);
+        console.log(productInForm);
+      };
+
 
     const handleInputChange = (e) => {
         let product = productInForm;
@@ -158,14 +170,26 @@ const CreateProductForm = forwardRef((props, ref) => {
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <TextField id="brandId" label="Marca" variant="outlined" fullWidth={true} defaultValue={productInForm.brandId} onChange={handleInputChange} />
+                        {/* <TextField id="brandId" label="Marca" variant="outlined" fullWidth={true} defaultValue={productInForm.brandId} onChange={handleInputChange} /> */}
+
+                        <Autocomplete
+                            id="combo-box-brands"
+                            defaultValue={{ id: selectedProduct.brandId, name: selectedProduct.brand }}
+                            options={brandsRepo}
+                            getOptionLabel={(option) => option.name}
+                            fullWidth={true}
+                            onChange={handleBrandChange}
+                            renderInput={(params) => <TextField {...params} label="Marca" variant="outlined" />}
+                        />
+
                     </Grid>
 
                     <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
                         {/* <TextField id="supplierId" label="Provvedor" variant="outlined" fullWidth={true} defaultValue={productInForm.supplierId} onChange={handleInputChange} /> */}
 
                         <Autocomplete
-                            id="combo-box-demo"
+                            id="combo-box-suppliers"
+                            defaultValue={{ id: selectedProduct.supplierId, fullName: selectedProduct.supplier }}
                             options={suppliersRepo}
                             getOptionLabel={(option) => option.fullName}
                             fullWidth={true}

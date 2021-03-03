@@ -1,27 +1,25 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useEffect, useState } from 'react';
 import axios from 'axios';
 import { DataGrid } from '@material-ui/data-grid';
 import CustomNoRowsOverlay from './CustomNoRowsOverlay';
 import CustomLoadingOverlay from "./CustomLoadingOverlay";
-import CreateProductDialog from './CreateProductDialog'
+import CreateBrandDialog from './CreateBrandDialog'
 import {  Grid } from '@material-ui/core';
-import { useProductsContext } from "../../context/ProductsContext";
-import ContextMenuProducts from "./ContextMenuProducts";
-import DetailsProductDialog from './DetailsProductDialog';
-import ConfirmDeleteProductDialog from './ConfirmDeleteProductDialog';
+import { useBrandsContext } from "../../context/BrandsContext";
+import ContextMenuBrands from "./ContextMenuBrands";
+import DetailsBrandDialog from './DetailsBrandDialog';
+import ConfirmDeleteBrandDialog from './ConfirmDeleteBrandDialog';
 import { useSuppliersContext } from '../../context/SuppliersContext';
-import { useBrandsContext } from '../../context/BrandsContext';
 
-export default function ProductsModule(props) {
+export default function BrandsModule(props) {
 
-    const { productsRepo, laodingProducts, getAllProducts, selectedProduct, setSelectedProduct, setOpenContextMenuProducts } = useProductsContext();
+    const { brandsRepo, laodingBrands, getAllBrands, selectedBrand, setSelectedBrand, setOpenContextMenuBrands } = useBrandsContext();
     const { getAllSuppliers } = useSuppliersContext();
-    const { getAllBrands } = useBrandsContext();
 
     const openContextMenu = (event) => {
         event.preventDefault();
-        if (selectedProduct) {
-            setOpenContextMenuProducts({
+        if (selectedBrand) {
+            setOpenContextMenuBrands({
                 mouseX: event.clientX - 2,
                 mouseY: event.clientY - 4,
             });
@@ -32,38 +30,30 @@ export default function ProductsModule(props) {
     const columns = [
 
         { field: 'no', headerName: 'No.', width: 100 },
-        { field: 'name', headerName: 'Producto', width: 180 },
-        { field: 'description', headerName: 'Descripcion', width: 130 },
-        { field: 'brand', headerName: 'Marca', width: 180 },
-        { field: 'supplier', headerName: 'Proveedor', width: 180 },
-        { field: 'stock', headerName: 'Existencia', width: 180 },
-        { field: 'unit', headerName: 'Unidad de medida', width: 180 },
-        { field: 'purchase_price', headerName: 'Precio de compra Q', width: 180 },
-        { field: 'sale_price', headerName: 'Precio de venta Q', width: 180 },
+        { field: 'name', headerName: 'Marca', width: 180 },
+        { field: 'description', headerName: 'Descripcion', width: 230 },
 
     ];
 
-    let intervalGetAllProducts;
+    let intervalGetAllBrands;
 
     //On mount component
     useEffect(() => {
-        console.log('ProductsModule Starts');
-        getAllProducts();
-        getAllSuppliers();
+        console.log('BrandsModule Starts');
         getAllBrands();
+        getAllSuppliers();
     }, []);
 
 
 
     const onRowSelection = (newSelection) => {
-        console.log(newSelection.row);
-        setSelectedProduct(newSelection.row);
+        setSelectedBrand(newSelection.row);
     }
 
     return (
         <>
-        <ConfirmDeleteProductDialog/>
-            <ContextMenuProducts />
+        <ConfirmDeleteBrandDialog/>
+            <ContextMenuBrands />
             <div style={{ height: 400, width: '100%' }} onContextMenu={openContextMenu}>
                 <DataGrid
                     pageSize={5}
@@ -73,8 +63,8 @@ export default function ProductsModule(props) {
                         NoRowsOverlay: CustomNoRowsOverlay,
                         LoadingOverlay: CustomLoadingOverlay,
                     }}
-                    loading={laodingProducts}
-                    rows={productsRepo}
+                    loading={laodingBrands}
+                    rows={brandsRepo}
                     columns={columns}
                     pageSize={5}
                     onRowClick={onRowSelection}
@@ -101,8 +91,8 @@ export default function ProductsModule(props) {
             <br />
 
             <Grid container justify="center">
-                <CreateProductDialog />
-                <DetailsProductDialog />
+                <CreateBrandDialog />
+                <DetailsBrandDialog />
             </Grid>
 
 

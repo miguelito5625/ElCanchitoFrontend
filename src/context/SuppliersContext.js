@@ -96,7 +96,7 @@ export function SuppliersProvider(props) {
     }
 
     const getAllSuppliers = () => {
-        console.log('getAllSupplier ip:', backendURL);
+        // console.log('getAllSupplier ip:', backendURL);
         setLaodingSuppliers(true);
         axios.get(`${backendURL}/suppliers`)
             .then(res => {

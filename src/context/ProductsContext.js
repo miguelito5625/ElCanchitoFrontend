@@ -29,20 +29,16 @@ export function ProductsProvider(props) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productInForm, setProductInForm] = useState(
         {
-            "cui": "",
-            "name1": "",
-            "name2": "",
-            "last_name1": "",
-            "last_name2": "",
-            "birth_date": "",
-            "phone": "",
-            "email": "",
-            "country": "Guatemala",
-            "departament": "Izabal",
-            "municipality": "Los Amates",
-            "street": "",
-            "reference": "",
-            "zip_code": ""
+            "name": "",
+            "description": "",
+            "brandId": "",
+            "brand": "",
+            "supplierId": "",
+            "supplier": "",
+            "stock": "",
+            "unit": "",
+            "purchase_price": "",
+            "sale_price": "",
         }
     );
 
@@ -79,7 +75,9 @@ export function ProductsProvider(props) {
                 "name": "",
                 "description": "",
                 "brandId": "",
+                "brand": "",
                 "supplierId": "",
+                "supplier": "",
                 "stock": "",
                 "unit": "",
                 "purchase_price": "",
@@ -89,7 +87,7 @@ export function ProductsProvider(props) {
     }
 
     const getAllProducts = () => {
-        console.log('getAllProduct ip:', backendURL);
+        // console.log('getAllProduct ip:', backendURL);
         setLaodingProducts(true);
         axios.get(`${backendURL}/products`)
             .then(res => {
@@ -118,14 +116,18 @@ export function ProductsProvider(props) {
         for (let index = 0; index < arrayProducts.length; index++) {
             const product = arrayProducts[index];
             if (product.isActive) {
-                const supplier  = product.supplier?`${product.supplier.person.name1} ${product.supplier.person.name2} ${product.supplier.person.last_name1} ${product.supplier.person.last_name2}`:'';
-                const brand = product.brand?product.brand.name:'';
+                const supplierId = product.supplier ? product.supplier.id : null;
+                const supplier = product.supplier ? `${product.supplier.person.name1} ${product.supplier.person.name2} ${product.supplier.person.last_name1} ${product.supplier.person.last_name2}` : '';
+                const brandId = product.brand ? product.brand.id : null;
+                const brand = product.brand ? product.brand.name : '';
                 products.push({
                     no: noProduct++,
                     id: product.id,
                     name: product.name,
                     description: product.description,
+                    brandId,
                     brand,
+                    supplierId,
                     supplier,
                     stock: product.stock,
                     unit: product.unit,
@@ -140,7 +142,8 @@ export function ProductsProvider(props) {
     }
 
     const saveOrUpdateProducte = () => {
-        // enqueueSnackbar(`DEMO`, { variant: 'info', autoHideDuration:2000, anchorOrigin:{ vertical: 'top', horizontal: 'right' } } );
+        // console.log(productInForm);
+        // return;
         if (productInForm.id) {
             updateProduct();
         } else {
@@ -151,44 +154,44 @@ export function ProductsProvider(props) {
 
     const createNewProduct = () => {
 
-        if (productInForm.name1 && productInForm.last_name1) {
+        if (productInForm.name) {
             setOpenProductCreateDialog(false);
-            enqueueSnackbar(`Creando producto ${productInForm.name1} ${productInForm.last_name1}`, { variant: 'info', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+            enqueueSnackbar(`Creando producto ${productInForm.name}`, { variant: 'info', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
             axios.post(`${backendURL}/products`, productInForm).then(res => {
-                enqueueSnackbar(`Proveedor ${productInForm.name1} ${productInForm.last_name1} creado`, { variant: 'success', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+                enqueueSnackbar(`Producto ${productInForm.name} creado`, { variant: 'success', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
                 getAllProducts();
             }).catch(error => {
-                enqueueSnackbar(`Error al crear el producto ${productInForm.name1} ${productInForm.last_name1}`, { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+                enqueueSnackbar(`Error al crear el producto ${productInForm.name}`, { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
             });
         } else {
-            enqueueSnackbar(`Necesita al menos el primer nombre y el primer apellido`, { variant: 'warning', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+            enqueueSnackbar(`Necesita al menos el nombre del producto`, { variant: 'warning', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
         }
 
     }
 
     const updateProduct = () => {
-        if (productInForm.name1 && productInForm.last_name1) {
+        if (productInForm.name) {
             setOpenProductCreateDialog(false);
-            enqueueSnackbar(`Actualizando producto ${productInForm.name1} ${productInForm.last_name1}`, { variant: 'info', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+            enqueueSnackbar(`Actualizando producto ${productInForm.name}`, { variant: 'info', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
             axios.put(`${backendURL}/products`, productInForm).then(res => {
-                enqueueSnackbar(`Proveedor ${productInForm.name1} ${productInForm.last_name1} actualizado`, { variant: 'success', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+                enqueueSnackbar(`Producto ${productInForm.name} actualizado`, { variant: 'success', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
                 getAllProducts();
             }).catch(error => {
-                enqueueSnackbar(`Error al actualizar el producto ${productInForm.name1} ${productInForm.last_name1}`, { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+                enqueueSnackbar(`Error al actualizar el producto ${productInForm.name}`, { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
             });
         } else {
-            enqueueSnackbar(`Necesita al menos el primer nombre y el primer apellido`, { variant: 'warning', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+            enqueueSnackbar(`Necesita al menos el nombre del producto`, { variant: 'warning', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
         }
     }
 
     const switchStateProduct = () => {
         setOpenContextMenuProducts(initialStateContextMenuProduct);
-        enqueueSnackbar(`Eliminando producto ${selectedProduct.name1} ${selectedProduct.last_name1}`, { variant: 'info', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+        enqueueSnackbar(`Eliminando producto ${selectedProduct.name}`, { variant: 'info', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
         axios.patch(`${backendURL}/products/${selectedProduct.id}`).then(res => {
-            enqueueSnackbar(`Proveedor ${selectedProduct.name1} ${selectedProduct.last_name1} eliminado`, { variant: 'success', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+            enqueueSnackbar(`Producto ${selectedProduct.name} eliminado`, { variant: 'success', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
             getAllProducts();
         }).catch(error => {
-            enqueueSnackbar(`Error al eliminar el producto ${selectedProduct.name1} ${selectedProduct.last_name1}`, { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
+            enqueueSnackbar(`Error al eliminar el producto ${selectedProduct.name}`, { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'right' } });
         });
     }
 
@@ -211,25 +214,25 @@ export function ProductsProvider(props) {
             clearSelectedProduct,
             showDetailsProduct,
             switchStateProduct,
-            openDeleteProductDialog, 
+            openDeleteProductDialog,
             setOpenDeleteProductDialog,
-            openProductCreateDialog, 
+            openProductCreateDialog,
             setOpenProductCreateDialog,
-            openContextMenuProducts, 
+            openContextMenuProducts,
             setOpenContextMenuProducts,
-            titleProductCreateDialog, 
+            titleProductCreateDialog,
             setTitleProductCreateDialog,
-            openDetailsProductDialog, 
+            openDetailsProductDialog,
             setOpenDetailsProductDialog,
         })
     }, [
-        productsRepo, 
-        productInForm, 
-        selectedDate, 
-        laodingProducts, 
-        selectedProduct, 
-        openDeleteProductDialog, 
-        openProductCreateDialog, 
+        productsRepo,
+        productInForm,
+        selectedDate,
+        laodingProducts,
+        selectedProduct,
+        openDeleteProductDialog,
+        openProductCreateDialog,
         openContextMenuProducts,
         titleProductCreateDialog,
         openDetailsProductDialog,

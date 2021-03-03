@@ -91,7 +91,7 @@ export function ClientsProvider(props) {
     }
 
     const getAllClients = () => {
-        console.log('getAllClient ip:', backendURL);
+        // console.log('getAllClient ip:', backendURL);
         setLaodingClients(true);
         axios.get(`${backendURL}/clients`)
             .then(res => {

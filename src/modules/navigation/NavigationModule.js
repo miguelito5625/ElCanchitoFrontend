@@ -19,6 +19,7 @@ import clsx from 'clsx';
 import { useAppContext } from '../../context/AppContext';
 import SuppliersPage from '../../pages/SuppliersPage';
 import ProductsPage from '../../pages/ProductsPage';
+import BrandsPage from '../../pages/BrandsPage';
 
 
 function NavigationModule(props) {
@@ -92,6 +93,7 @@ function NavigationModule(props) {
                         <Route path="/" exact component={DashboardPage} />
                         <Route path="/clients" component={ClientsPage} />
                         <Route path="/suppliers" component={SuppliersPage} />
+                        <Route path="/brands" component={BrandsPage} />
                         <Route path="/products" component={ProductsPage} />
                         {/* <Route path="/edit/:id" component={CreateNote} /> */}
                     </div>
