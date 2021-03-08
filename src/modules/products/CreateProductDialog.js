@@ -121,7 +121,7 @@ const useStylesForm = makeStyles((theme) => ({
 // function CreateProductForm(props, ref) {
 const CreateProductForm = forwardRef((props, ref) => {
     const classes = useStylesForm();
-    const { productInForm, setProductInForm, selectedProduct, saveOrUpdateProducte } = useProductsContext();
+    const { productInForm, setProductInForm, selectedProduct, saveOrUpdateProducte, titleProductCreateDialog } = useProductsContext();
     const { suppliersRepo } = useSuppliersContext();
     const { brandsRepo } = useBrandsContext();
 
@@ -174,7 +174,7 @@ const CreateProductForm = forwardRef((props, ref) => {
 
                         <Autocomplete
                             id="combo-box-brands"
-                            defaultValue={{ id: selectedProduct.brandId, name: selectedProduct.brand }}
+                            defaultValue={selectedProduct?{ id: selectedProduct.brandId, name: selectedProduct.brand }:null}
                             options={brandsRepo}
                             getOptionLabel={(option) => option.name}
                             fullWidth={true}
@@ -189,7 +189,7 @@ const CreateProductForm = forwardRef((props, ref) => {
 
                         <Autocomplete
                             id="combo-box-suppliers"
-                            defaultValue={{ id: selectedProduct.supplierId, fullName: selectedProduct.supplier }}
+                            defaultValue={selectedProduct?{ id: selectedProduct.supplierId, fullName: selectedProduct.supplier }:null}
                             options={suppliersRepo}
                             getOptionLabel={(option) => option.fullName}
                             fullWidth={true}
